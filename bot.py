@@ -15,8 +15,24 @@ async def on_ready():
 # Rock,Paper & Scissors Game Command
 @client.command()
 async def game(ctx):
-    option = ['rock', 'paper', 'scissors']
-    await ctx.send(random.choice(option))
+    emojis = ['✊', '🖐️', '✌️']
+
+    cpu = random.choice(emojis)
+    
+    embedVar = discord.Embed(title="ROCK, PAPER & SCISSORS!",description = "Choose between rock, paper, or scissors, {}." . format(ctx.author.mention), color = 0xff9900)
+    embedVar.add_field(name=":fist: ROCK", value="React with :fist: emoji to choose rock.", inline = False)
+    embedVar.add_field(name=":hand_splayed: PAPER", value="React with :hand_splayed: emoji to choose paper.", inline = False)
+    embedVar.add_field(name=":v: SCISSORS", value="React with :v: emoji to choose scissors.", inline = False)
+    emb = await ctx.send(embed = embedVar)
+
+    for emoji in emojis:
+        await emb.add_reaction(emoji)
+
+    
+    reaction, user = await client.wait_for('reaction_add', 
+                                       check=lambda reaction, user: reaction.emoji in emojis)
+    await ctx.send(f'You chose {reaction}')
+    await ctx.send(f'CPU chose {cpu}')
 
 
 # Ping Command
